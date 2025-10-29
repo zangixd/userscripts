@@ -30,10 +30,11 @@ function hookPush() {
 
     return pushOrig.apply(this, args);
   }
-
+  
   window.addEventListener('wheel', () => {
+    if (!document.getElementById('uiBase').classList.contains('onGame')) return;
     isJumping = true;
-  }, { passive: false });
+  });
 }
 
 hookPush();
