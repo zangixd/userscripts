@@ -14,6 +14,8 @@
 
 'use strict';
 
+const consoleLog = window.console.log;
+
 let showBorders = false;
 let showInvis = false;
 let showDeathZones = false;
@@ -64,10 +66,10 @@ function waitForObjects() {
 
   if (captured) {
     main();
-    window.console.log('[visualizer] Objects captured');
+    consoleLog('[visualizer] Objects captured');
   } else {
     setTimeout(waitForObjects, 500);
-    window.console.log('[visualizer] Objects not found');
+    consoleLog('[visualizer] Objects not found');
   }
 }
 
@@ -79,7 +81,7 @@ function clearScene(scene) {
 		mesh.material.dispose();
 	}
 	sceneMeshes = [];
-  window.console.log('[visualizer] Meshes cleared');
+  consoleLog('[visualizer] Meshes cleared');
 }
 
 // Render based on map data
@@ -87,7 +89,7 @@ function renderMeshes(mapData) {
   const THREE = window.gameObj.THREE;
   const scene = window.gameObj.render.scene;
 
-  window.console.log('[visualizer] Clearing previous meshes');
+  consoleLog('[visualizer] Clearing previous meshes');
   clearScene(scene);
 
   for (const obj of mapData.objects) {
@@ -245,9 +247,9 @@ function main() {
 
   let mapData = window.gameObj.map.maps[window.gameObj.mapIndex];
   let sessionId = window.gameObj.sessionId;
-  window.console.log('[visualizer] Map Data found: ', mapData, ', Session: ', sessionId);
+  consoleLog('[visualizer] Map Data found: ', mapData, ', Session: ', sessionId);
 
-  window.console.log('[visualizer] Rendering started');
+  consoleLog('[visualizer] Rendering started');
   renderMeshes(mapData);
 
   // Check for new map data
@@ -257,12 +259,12 @@ function main() {
 
     if (mapData.name != mapList[mapIndex].name) {
       mapData = mapList[mapIndex];
-      window.console.log('[visualizer] New map data found: ', mapData);
+      consoleLog('[visualizer] New map data found: ', mapData);
 
-      window.console.log('[visualizer] Re-rendering');
+      consoleLog('[visualizer] Re-rendering');
       renderMeshes(mapData);
     } else if (sessionId !== window.gameObj.sessionId) {
-      window.console.log('[visualizer] New session detected. Re-rendering');
+      consoleLog('[visualizer] New session detected. Re-rendering');
       sessionId = window.gameObj.sessionId;
       renderMeshes(mapData);
     }
