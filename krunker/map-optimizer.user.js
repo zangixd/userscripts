@@ -5,14 +5,16 @@
 // @exclude     *://krunker.io/editor.html
 // @version     1.0.0
 // @author      Zangi
-// @description Fetches optimized map files from a seperate server
+// @description Bypasses checksum krunker does on fetched map files in order to fetch optimized versions from a seperate server. Also includes cross session toggle functionallity.
 // @run-at      document-start
 // ==/UserScript==
 
 // NOTE
+//
 // This script requires: 
 // 1. Access to krunker's game object which I assign to the global variable: window.gameObj using a seperate script. 
 // 2. The current file name of the map currently being fetched which I assign to the global variable: window.mapFileName using a seperate script.
+// 3. The ability to change krunkers map fetch logic within its game code to grap map files from a different source based on if map optimizations are toggled.
 
 'use strict';
 
