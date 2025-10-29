@@ -14,6 +14,7 @@
 const pushOrig = Array.prototype.push;
 let isJumping = false;
 let jumpState = 0;
+const uiBase = document.getElementById('uiBase');
 
 function hookPush() {
   Array.prototype.push = function(...args) {
@@ -31,10 +32,11 @@ function hookPush() {
   }
 
   window.addEventListener('wheel', () => {
-    if (document.activeElement != document.body) return;
+    const uiBase = document.getElementById('uiBase');
+    if (!uiBase.classList.contains('onGame')) return;
 
     isJumping = true;
-  });
+  }, { passive: true });
 }
 
 hookPush();
