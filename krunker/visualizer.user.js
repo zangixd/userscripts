@@ -64,10 +64,10 @@ function waitForObjects() {
 
   if (captured) {
     main();
-    consoleLog('[visualizer] Objects captured');
+    window.console.log;('[visualizer] Objects captured');
   } else {
     setTimeout(waitForObjects, 500);
-    consoleLog('[visualizer] Objects not found');
+    window.console.log;('[visualizer] Objects not found');
   }
 }
 
@@ -79,7 +79,7 @@ function clearScene(scene) {
 		mesh.material.dispose();
 	}
 	sceneMeshes = [];
-  consoleLog('[visualizer] Meshes cleared');
+  window.console.log;('[visualizer] Meshes cleared');
 }
 
 // Render based on map data
@@ -87,7 +87,7 @@ function renderMeshes(mapData) {
   const THREE = window.gameObj.THREE;
   const scene = window.gameObj.render.scene;
 
-  consoleLog('[visualizer] Clearing previous meshes');
+  window.console.log;('[visualizer] Clearing previous meshes');
   clearScene(scene);
 
   for (const obj of mapData.objects) {
@@ -245,9 +245,9 @@ function main() {
 
   let mapData = window.gameObj.map.maps[window.gameObj.mapIndex];
   let sessionId = window.gameObj.sessionId;
-  consoleLog('[visualizer] Map Data found: ', mapData, ', Session: ', sessionId);
+  window.console.log;('[visualizer] Map Data found: ', mapData, ', Session: ', sessionId);
 
-  consoleLog('[visualizer] Rendering started');
+  window.console.log;('[visualizer] Rendering started');
   renderMeshes(mapData);
 
   // Check for new map data
@@ -257,12 +257,12 @@ function main() {
 
     if (mapData.name != mapList[mapIndex].name) {
       mapData = mapList[mapIndex];
-      consoleLog('[visualizer] New map data found: ', mapData);
+      window.console.log;('[visualizer] New map data found: ', mapData);
 
-      consoleLog('[visualizer] Re-rendering');
+      window.console.log;('[visualizer] Re-rendering');
       renderMeshes(mapData);
     } else if (sessionId !== window.gameObj.sessionId) {
-      consoleLog('[visualizer] New session detected. Re-rendering');
+      window.console.log;('[visualizer] New session detected. Re-rendering');
       sessionId = window.gameObj.sessionId;
       renderMeshes(mapData);
     }
