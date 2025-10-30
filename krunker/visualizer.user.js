@@ -137,16 +137,24 @@ function renderMeshes(mapData) {
         polygonOffsetUnits: 1
       });
 
+      let rampW = w;
+      let rampL = l;
       if (obj.i === 9) { // Ramps
-        const a = new THREE.Vector2(x + (w / 2), y - (h / 2));
-        const b = new THREE.Vector2(x - (w / 2), y - (h / 2));
+        // Swap width and length when rotated sideways
+        if (obj.d === 1 || obj.d === 3) {
+          [rampW, rampL] = [rampL, rampW];
+        }
+
+        const a = new THREE.Vector2(x + (rampW / 2), y - (h / 2));
+        const b = new THREE.Vector2(x - (rampW / 2), y - (h / 2));
         const c = new THREE.Vector2(a.x, y + (h / 2));
 
         const vertices = [a, b, c];
-        const width = l;
+        const width = rampL;
 
         geometry = createPrismGeometry(THREE, vertices, width);
         geometry.computeBoundingBox();
+
         const center = new THREE.Vector3();
         geometry.boundingBox.getCenter(center);
         geometry.translate(-center.x, -center.y, -center.z);
@@ -177,7 +185,7 @@ function renderMeshes(mapData) {
       consoleLog(geometry);
       scene.add(invisMesh);
       sceneMeshes.push(invisMesh);
-		}
+    }
 
     // Death Zones
     if (obj.i === 12 && showDeathZones) {
