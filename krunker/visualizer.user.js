@@ -51,6 +51,12 @@ function handleKeyEvents(event, mapData) {
   }
 }
 
+function createPrismGeometry(THREE, vertices, width) {
+  const shape = new THREE.Shape(vertices);
+  const settings = { depth: width, bevelEnabled: false };
+  return new THREE.ExtrudeGeometry(shape, settings);
+}
+
 // Wait for krunker to populate all required objects
 function waitForObjects() {
   const captured =
@@ -119,22 +125,58 @@ function renderMeshes(mapData) {
 
     // Invisible objects
     if (obj.v && showInvis) {
-			const geometry = new THREE.BoxGeometry(w, h, l);
-			const material = new THREE.MeshBasicMaterial({
-				color: 0xffffff,
-				transparent: true,
-				opacity: 0.5,
-				depthWrite: false,
-				side: THREE.DoubleSide,
-				polygonOffset: true,
-				polygonOffsetFactor: 1,
-				polygonOffsetUnits: 1
-			});
+      let geometry, invisMesh;
+      const material = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.5,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+        polygonOffset: true,
+        polygonOffsetFactor: 1,
+        polygonOffsetUnits: 1
+      });
 
-			const invisMesh = new THREE.Mesh(geometry, material);
-			invisMesh.position.set(x, y + h / 2, z);
-			scene.add(invisMesh);
-			sceneMeshes.push(invisMesh);
+      if (obj.i === 9) { // Ramps
+        const a = new THREE.Vector2(x + (w / 2), y - (h / 2));
+        const b = new THREE.Vector2(x - (w / 2), y - (h / 2));
+        const c = new THREE.Vector2(a.x, y + (h / 2));
+
+        const vertices = [a, b, c];
+        const width = l;
+
+        geometry = createPrismGeometry(THREE, vertices, width);
+        geometry.computeBoundingBox();
+        const center = new THREE.Vector3();
+        geometry.boundingBox.getCenter(center);
+        geometry.translate(-center.x, -center.y, -center.z);
+
+        invisMesh = new THREE.Mesh(geometry, material);
+
+        if (obj.d !== undefined) {
+          switch (obj.d) {
+            case 1:
+              invisMesh.rotateY(-Math.PI / 2);
+              break;
+            case 2:
+              invisMesh.rotateY(Math.PI);
+              break;
+            case 3:
+              invisMesh.rotateY(Math.PI / 2);
+              break;
+          }
+        }
+
+        invisMesh.position.set(x, y + (h / 2), z);
+      } else { // Everything else
+        geometry = new THREE.BoxGeometry(w, h, l);
+        invisMesh = new THREE.Mesh(geometry, material);
+        invisMesh.position.set(x, y + h / 2, z);
+      }
+
+      consoleLog(geometry);
+      scene.add(invisMesh);
+      sceneMeshes.push(invisMesh);
 		}
 
     // Death Zones
@@ -158,7 +200,7 @@ function renderMeshes(mapData) {
     }
 
     // Score Zones
-    if (obj.i === 12 && showScoreZones) {
+    if (obj.i === 10 && showScoreZones) {
       const geometry = new THREE.BoxGeometry(w, h, l);
 			const material = new THREE.MeshBasicMaterial({
 				color: 0x00ff00,
@@ -178,7 +220,7 @@ function renderMeshes(mapData) {
     }
 
     // Teleporters
-    if (obj.i === 12 && showTeleporters) {
+    if (obj.i === 27 && showTeleporters) {
       const geometry = new THREE.BoxGeometry(w, h, l);
 			const material = new THREE.MeshBasicMaterial({
 				color: 0x00ccff,
